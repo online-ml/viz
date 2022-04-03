@@ -1,0 +1,27 @@
+name: singularity-hpc
+
+on:
+  # This should run on a push to any branch except main, gh-pages, and binoc
+  pull_request: []
+
+jobs:
+  test-render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python Environment
+        run: conda create --quiet --name viz
+
+      - name: Lint python code
+        run: |
+          export PATH="/usr/share/miniconda/bin:$PATH"
+          source activate viz
+          conda install pandoc
+          pip install -r requirements.txt
+          make html
+
+      - name: Check Spelling
+        uses: crate-ci/typos@592b36d23c62cb378f6097a292bc902ee73f93ef # version 1.0.4
+        with:
+          files: ./build/_html/*.html ./build/_html/about/ ./build/_html/auto_examples/
