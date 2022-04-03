@@ -7,6 +7,8 @@ We use [sphinx-gallery](https://sphinx-gallery.github.io/stable/getting_started.
 examples and visualizations, and [sphinx-material](https://github.com/bashtage/sphinx-material/)
 for the template to match [https://riverml.xyz/](https://riverml.xyz/).
 
+![images/viz.png](images/viz.png)
+
 See our [contributing guide](contributing.md) for how to add an example, or 
 
 ⭐️ [View the Interface](https://online-ml.github.io/viz/) ⭐️

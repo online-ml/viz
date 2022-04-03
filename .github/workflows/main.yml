@@ -1,4 +1,4 @@
-name: singularity-hpc
+name: viz
 
 on:
   # This should run on a push to any branch except main, gh-pages, and binoc
@@ -8,8 +8,7 @@ jobs:
   test-render:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v3
       - name: Setup Python Environment
         run: conda create --quiet --name viz
 
@@ -24,4 +23,4 @@ jobs:
       - name: Check Spelling
         uses: crate-ci/typos@592b36d23c62cb378f6097a292bc902ee73f93ef # version 1.0.4
         with:
-          files: ./build/_html/*.html ./build/_html/about/ ./build/_html/auto_examples/
+          files: ./_build/html/*.html ./_build/html/about/ ./_build/html/auto_examples/

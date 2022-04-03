@@ -1,0 +1,55 @@
+version: 2.1
+
+workflows:
+  version: 2
+
+  # The build workflow will build a preview for the site, intended for PRs
+  build:
+    jobs:
+      - build-site:
+          filters:
+            branches:
+              ignore: gh-pages
+
+install: &install
+  name: install dependencies for build
+  command: |
+     $HOME/conda/bin/conda install pandoc
+     $HOME/conda/bin/pip install -r ~/repo/requirements.txt
+
+install_python_3: &install_python_3
+  name: install Python 3.5 dependencies
+  command: | 
+      ls $HOME
+      if [ ! -d "/home/circleci/conda" ]; then
+          wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+          /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/conda
+          export PATH=$HOME/conda/bin:$PATH
+       else
+           echo "Miniconda 3 is already installed, continuing to build."
+       fi
+
+build_site: &build_site
+  name: Jekyll Build
+  command: make html
+
+jobs:
+  build-site:
+    docker:
+      - image: cimg/base:2021.04
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies
+      - run: *install_python_3
+      - run: *install
+      - save_cache:
+          paths:
+            - /home/circleci/conda
+          key: v1-dependencies        
+      - run: *build_site
+      - store_artifacts:
+          path: ~/repo/_build/html
+          destination: viz
